@@ -1,72 +1,72 @@
 package com.example.tugasrecycler.adapter;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tugasrecycler.R;
 import com.example.tugasrecycler.models.Contact;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class ContacsAdapter {
-    public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
+    public class ContacsAdapter extends RecyclerView.Adapter<ContacsAdapter.ViewHolder> {
 
-        //atribut
-        private List<Contact> mContact;
+        private List<Contact> ContactList;
 
-        //konstruktor
-        public ContactsAdapter(List<Contact> mContact) {
-            this.mContact = mContact;
+        public ContacsAdapter(List<Contact> ContactList) {
+
+            this.ContactList = ContactList;
         }
 
         @NonNull
         @Override
-        public ContactsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            //menghubungakn item_contact.xml ke adaptor
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             Context context = viewGroup.getContext();
             LayoutInflater inflater = LayoutInflater.from(context);
-            View contactview = inflater.inflate(R.layout.item_contact, viewGroup, false);
 
-            ViewHolder viewHolder = new ViewHolder(contactview);
+            View filmView = inflater.inflate(R.layout.item_contact, viewGroup, false);
 
-            return viewHolder;
+            return new ViewHolder(filmView);
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-            //menghubungkan / mensetting nilai masing2 item
-            Contact itemContact = mContact.get(i);
-            TextView textView = viewHolder.nameTextView;
-            textView.setText(itemContact.getmName());
+            Contact Contact = ContactList.get(i);
 
-            Button buttonContact = viewHolder.messageButton;
-            buttonContact.setText(itemContact.ismOnline() ? "Message" : "Offline");
-            buttonContact.setEnabled(itemContact.ismOnline());
+            if (Contact.getImg() != null) {
+                Picasso.get().load(Contact.getImg()).into(viewHolder.imageView);
+            } else {
+                Picasso.get().load(Contact.getImg_local()).into(viewHolder.imageView);
+            }
+
+            viewHolder.textView.setText(Contact.getTitle());
         }
 
         @Override
         public int getItemCount() {
-            return mContact.size();
+            return ContactList.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
 
-            private TextView nameTextView;
-            private Button messageButton;
+            ImageView imageView;
+            TextView textView;
+            TextView descView;
 
-            public ViewHolder(View itemView) {
-
+            ViewHolder(@NonNull View itemView) {
                 super(itemView);
 
-                nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
-                messageButton = (Button) itemView.findViewById(R.id.message_button);
+                imageView = itemView.findViewById(R.id.item_Contacts_img);
+                textView = itemView.findViewById(R.id.item_Contacts_title);
+                descView = itemView.findViewById(R.id.item_Contacts_desc);
             }
         }
     }
-}
